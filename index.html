@@ -34,7 +34,6 @@
             position: relative;
         }
 
-        /* ── Particules de fond ── */
         .particles {
             position: fixed;
             top: 0;
@@ -61,7 +60,6 @@
             100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
         }
 
-        /* ── Conteneur principal ── */
         .container {
             text-align: center;
             z-index: 10;
@@ -70,7 +68,6 @@
             width: 100%;
         }
 
-        /* ── Logo entreprise ── */
         .logo-container {
             margin-bottom: 2rem;
         }
@@ -94,7 +91,6 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        /* ── Titre ── */
         .title {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 300;
@@ -121,7 +117,6 @@
             font-weight: 300;
         }
 
-        /* ── Compteur ── */
         .countdown {
             display: flex;
             justify-content: center;
@@ -179,7 +174,6 @@
             font-weight: 600;
         }
 
-        /* ── Animation flip ── */
         .time-value.flip {
             animation: flipDown 0.6s ease;
         }
@@ -190,7 +184,6 @@
             100% { transform: scaleY(1); opacity: 1; }
         }
 
-        /* ── Barre de progression ── */
         .progress-container {
             width: 100%;
             max-width: 500px;
@@ -232,7 +225,6 @@
             text-align: right;
         }
 
-        /* ── Message motivation ── */
         .motivation {
             font-size: clamp(0.9rem, 2vw, 1.1rem);
             color: rgba(255, 255, 255, 0.6);
@@ -240,13 +232,10 @@
             font-style: italic;
         }
 
-        .motivation .emoji {
-            font-style: normal;
-        }
-
-        /* ── JOUR J ── */
         .launch-message {
             display: none;
+            text-align: center;
+            z-index: 10;
             animation: zoomIn 1s ease;
         }
 
@@ -282,7 +271,6 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* ── Confettis ── */
         .confetti-container {
             position: fixed;
             top: 0;
@@ -302,18 +290,11 @@
         }
 
         @keyframes confetti-fall {
-            0% {
-                transform: translateY(0) rotateZ(0deg) rotateX(0deg);
-                opacity: 1;
-            }
+            0% { transform: translateY(0) rotateZ(0deg) rotateX(0deg); opacity: 1; }
             75% { opacity: 1; }
-            100% {
-                transform: translateY(100vh) rotateZ(720deg) rotateX(360deg);
-                opacity: 0;
-            }
+            100% { transform: translateY(100vh) rotateZ(720deg) rotateX(360deg); opacity: 0; }
         }
 
-        /* ── Pulse ring ── */
         .pulse-ring {
             position: fixed;
             top: 50%;
@@ -335,46 +316,47 @@
             50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.1; }
         }
 
-        /* ── Responsive ajustements ── */
+        /* Debug banner */
+        .debug-banner {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: #0f0;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            z-index: 9999;
+            font-family: monospace;
+        }
+
         @media (max-width: 480px) {
-            .countdown {
-                gap: 0.5rem;
-            }
-            .time-block {
-                min-width: 70px;
-                padding: 0.8rem;
-                border-radius: 14px;
-            }
+            .countdown { gap: 0.5rem; }
+            .time-block { min-width: 70px; padding: 0.8rem; border-radius: 14px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Anneaux de pulse en arrière-plan -->
     <div class="pulse-ring"></div>
     <div class="pulse-ring"></div>
     <div class="pulse-ring"></div>
 
-    <!-- Particules flottantes -->
     <div class="particles" id="particles"></div>
-
-    <!-- Conteneur de confettis -->
     <div class="confetti-container" id="confetti-container"></div>
 
-    <!-- Contenu principal -->
+    <!-- Debug : affiche les dates pour vérifier -->
+    <div class="debug-banner" id="debug"></div>
+
     <div class="container" id="countdown-container">
-        <!-- Logo -->
         <div class="logo-container">
             <div class="logo-placeholder">🚀</div>
-            <!-- Remplacez par : <img src="votre-logo.png" alt="Logo" style="width:80px;"> -->
         </div>
 
-        <!-- Titre -->
         <h2 class="title">Lancement dans</h2>
         <h1 class="subtitle" id="main-title">Bientôt en ligne</h1>
         <p class="date-label">📅 1er Mars 2025 — 00h00</p>
 
-        <!-- Compteur -->
         <div class="countdown" id="countdown">
             <div class="time-block">
                 <div class="time-value" id="days">00</div>
@@ -394,7 +376,6 @@
             </div>
         </div>
 
-        <!-- Barre de progression -->
         <div class="progress-container">
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
@@ -402,13 +383,9 @@
             <p class="progress-text" id="progress-text">0% accompli</p>
         </div>
 
-        <!-- Message motivation -->
-        <p class="motivation" id="motivation">
-            <span class="emoji">💪</span> Chaque jour nous rapproche du lancement !
-        </p>
+        <p class="motivation" id="motivation">💪 Chaque jour nous rapproche du lancement !</p>
     </div>
 
-    <!-- Message Jour J -->
     <div class="launch-message" id="launch-message">
         <h1>🎉 C'EST PARTI ! 🎉</h1>
         <p>Le produit est officiellement lancé !</p>
@@ -416,137 +393,160 @@
 
     <script>
         // ══════════════════════════════════════
-        //  CONFIGURATION
+        //  DATES — Mars = mois 2 en JavaScript (0=Jan, 1=Fev, 2=Mars)
         // ══════════════════════════════════════
-        const LAUNCH_DATE = new Date(2025, 2, 1, 0, 0, 0);
-        // Date de début du countdown (pour la barre de progression)
-        const START_DATE = new Date(2025, 0, 1, 0, 0, 0);
+        var launchYear = 2025;
+        var launchMonth = 2; // 2 = MARS
+        var launchDay = 1;
 
-        // Messages de motivation selon les jours restants
-        const MOTIVATIONS = [
+        var startYear = 2025;
+        var startMonth = 0; // 0 = JANVIER
+        var startDay = 1;
+
+        var LAUNCH_DATE = new Date(launchYear, launchMonth, launchDay, 0, 0, 0, 0);
+        var START_DATE = new Date(startYear, startMonth, startDay, 0, 0, 0, 0);
+
+        // ══════════════════════════════════════
+        //  DEBUG — affiche les infos (à retirer plus tard)
+        // ══════════════════════════════════════
+        var now = new Date();
+        var debugEl = document.getElementById('debug');
+        debugEl.innerHTML =
+            'NOW: ' + now.toString() + '<br>' +
+            'LAUNCH: ' + LAUNCH_DATE.toString() + '<br>' +
+            'DIFF (ms): ' + (LAUNCH_DATE - now) + '<br>' +
+            'DIFF (jours): ' + Math.floor((LAUNCH_DATE - now) / (1000*60*60*24));
+
+        // ══════════════════════════════════════
+        //  MESSAGES MOTIVATION
+        // ══════════════════════════════════════
+        var MOTIVATIONS = [
             { maxDays: 1, msg: "🔥 C'est DEMAIN ! On y est presque !" },
             { maxDays: 3, msg: "⚡ Plus que quelques jours... La tension monte !" },
             { maxDays: 7, msg: "🎯 Dernière ligne droite, on lâche rien !" },
             { maxDays: 14, msg: "🚀 Deux semaines ! Le compte à rebours s'accélère !" },
             { maxDays: 30, msg: "💪 Un mois... Chaque jour compte !" },
             { maxDays: 60, msg: "🌟 On avance bien, le lancement approche !" },
-            { maxDays: Infinity, msg: "💪 Chaque jour nous rapproche du lancement !" }
+            { maxDays: 99999, msg: "💪 Chaque jour nous rapproche du lancement !" }
         ];
 
         // ══════════════════════════════════════
-        //  PARTICULES DE FOND
+        //  PARTICULES
         // ══════════════════════════════════════
         function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
+            var container = document.getElementById('particles');
+            for (var i = 0; i < 50; i++) {
+                var particle = document.createElement('div');
+                particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
                 particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
                 particle.style.animationDelay = (Math.random() * 10) + 's';
-                particle.style.width = (Math.random() * 4 + 1) + 'px';
-                particle.style.height = particle.style.width;
+                var size = (Math.random() * 4 + 1) + 'px';
+                particle.style.width = size;
+                particle.style.height = size;
                 container.appendChild(particle);
             }
         }
 
         // ══════════════════════════════════════
-        //  CONFETTIS 🎊
+        //  CONFETTIS
         // ══════════════════════════════════════
         function launchConfetti() {
-            const container = document.getElementById('confetti-container');
-            const colors = ['#FD79A8', '#FDCB6E', '#6C5CE7', '#00CEC9', '#FF6B6B', '#A29BFE', '#55EFC4'];
-            const shapes = ['square', 'circle'];
+            var container = document.getElementById('confetti-container');
+            var colors = ['#FD79A8', '#FDCB6E', '#6C5CE7', '#00CEC9', '#FF6B6B', '#A29BFE', '#55EFC4'];
 
-            for (let i = 0; i < 150; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.classList.add('confetti-piece');
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
-
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.background = color;
-                    confetti.style.borderRadius = shape === 'circle' ? '50%' : '2px';
-                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
-                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
-                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-
-                    container.appendChild(confetti);
-
-                    // Nettoyage
-                    setTimeout(() => confetti.remove(), 5000);
-                }, i * 30);
+            for (var i = 0; i < 150; i++) {
+                (function(index) {
+                    setTimeout(function() {
+                        var confetti = document.createElement('div');
+                        confetti.className = 'confetti-piece';
+                        var color = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.background = color;
+                        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                        container.appendChild(confetti);
+                        setTimeout(function() { confetti.remove(); }, 5000);
+                    }, index * 30);
+                })(i);
             }
-
-            // Relancer toutes les 5 secondes le jour J
             setTimeout(launchConfetti, 6000);
         }
 
         // ══════════════════════════════════════
         //  COUNTDOWN
         // ══════════════════════════════════════
-        let previousValues = { days: '', hours: '', minutes: '', seconds: '' };
+        var previousValues = { days: '', hours: '', minutes: '', seconds: '' };
 
         function updateCountdown() {
-            const now = new Date();
-            const diff = LAUNCH_DATE - now;
+            var now = new Date();
+            var diff = LAUNCH_DATE.getTime() - now.getTime();
 
             if (diff <= 0) {
-                // 🎉 JOUR J !
                 document.getElementById('countdown-container').style.display = 'none';
-                const launchMsg = document.getElementById('launch-message');
-                launchMsg.classList.add('active');
+                document.getElementById('launch-message').className = 'launch-message active';
+                document.getElementById('debug').style.display = 'none';
                 launchConfetti();
-                document.title = '🎉 C\'EST PARTI !';
+                document.title = "🎉 C'EST PARTI !";
                 return;
             }
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            var totalSeconds = Math.floor(diff / 1000);
+            var days = Math.floor(totalSeconds / 86400);
+            var hours = Math.floor((totalSeconds % 86400) / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
 
-            const values = {
-                days: String(days).padStart(2, '0'),
-                hours: String(hours).padStart(2, '0'),
-                minutes: String(minutes).padStart(2, '0'),
-                seconds: String(seconds).padStart(2, '0')
+            var values = {
+                days: (days < 10 ? '0' : '') + days,
+                hours: (hours < 10 ? '0' : '') + hours,
+                minutes: (minutes < 10 ? '0' : '') + minutes,
+                seconds: (seconds < 10 ? '0' : '') + seconds
             };
 
-            // Mise à jour avec animation flip
-            ['days', 'hours', 'minutes', 'seconds'].forEach(unit => {
-                const el = document.getElementById(unit);
+            var units = ['days', 'hours', 'minutes', 'seconds'];
+            for (var i = 0; i < units.length; i++) {
+                var unit = units[i];
+                var el = document.getElementById(unit);
                 if (previousValues[unit] !== values[unit]) {
                     el.textContent = values[unit];
-                    el.classList.remove('flip');
-                    void el.offsetWidth; // Force reflow
-                    el.classList.add('flip');
+                    el.className = 'time-value';
+                    void el.offsetWidth;
+                    el.className = 'time-value flip';
                 }
-            });
+            }
 
-            previousValues = { ...values };
+            previousValues = {
+                days: values.days,
+                hours: values.hours,
+                minutes: values.minutes,
+                seconds: values.seconds
+            };
 
-            // Mise à jour du titre de la page
-            document.title = `🚀 J-${days} — Lancement Produit`;
+            document.title = '🚀 J-' + days + ' — Lancement Produit';
 
             // Barre de progression
-            const totalDuration = LAUNCH_DATE - START_DATE;
-            const elapsed = now - START_DATE;
-            const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
+            var totalDuration = LAUNCH_DATE.getTime() - START_DATE.getTime();
+            var elapsed = now.getTime() - START_DATE.getTime();
+            var progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
             document.getElementById('progress-fill').style.width = progress.toFixed(1) + '%';
             document.getElementById('progress-text').textContent = progress.toFixed(1) + '% accompli';
 
             // Message motivation
-            const motivation = MOTIVATIONS.find(m => days <= m.maxDays);
-            document.getElementById('motivation').innerHTML = motivation.msg;
+            for (var j = 0; j < MOTIVATIONS.length; j++) {
+                if (days <= MOTIVATIONS[j].maxDays) {
+                    document.getElementById('motivation').innerHTML = MOTIVATIONS[j].msg;
+                    break;
+                }
+            }
 
-            // Prochaine mise à jour
-            requestAnimationFrame(() => setTimeout(updateCountdown, 1000));
+            setTimeout(updateCountdown, 1000);
         }
 
         // ══════════════════════════════════════
-        //  INITIALISATION
+        //  LANCEMENT
         // ══════════════════════════════════════
         createParticles();
         updateCountdown();
